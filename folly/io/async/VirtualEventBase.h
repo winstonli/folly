@@ -84,6 +84,10 @@ class VirtualEventBase : public folly::Executor, public folly::TimeoutManager {
     ]() mutable { f(); }));
   }
 
+  HHWheelTimer& timer() {
+    return evb_.timer();
+  }
+
   void attachTimeoutManager(
       AsyncTimeout* obj,
       TimeoutManager::InternalEnum internal) override {
@@ -153,6 +157,10 @@ class VirtualEventBase : public folly::Executor, public folly::TimeoutManager {
     }
     ++loopKeepAliveCountAtomic_;
     return LoopKeepAlive(this);
+  }
+
+  bool inRunningEventBaseThread() const {
+    return evb_.inRunningEventBaseThread();
   }
 
  private:
